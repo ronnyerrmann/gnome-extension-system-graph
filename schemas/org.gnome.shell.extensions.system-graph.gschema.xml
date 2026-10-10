@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.system-graph" path="/org/gnome/shell/extensions/system-graph/">
+
+    <!-- General -->
+    <key name="panel-position" type="s">
+      <choices><choice value="left"/><choice value="center"/><choice value="right"/></choices>
+      <default>'right'</default>
+      <summary>Panel area the graphs are placed in</summary>
+    </key>
+    <key name="panel-index" type="i">
+      <default>0</default>
+      <summary>Position inside the panel area (0 = first)</summary>
+    </key>
+    <key name="show-labels" type="b">
+      <default>false</default>
+      <summary>Show a text label in front of each graph</summary>
+    </key>
+    <key name="show-values" type="b">
+      <default>true</default>
+      <summary>Draw the current value on top of each graph</summary>
+    </key>
+    <key name="background-color" type="s">
+      <default>'rgba(255,255,255,0.08)'</default>
+      <summary>Graph background color</summary>
+    </key>
+    <key name="text-color" type="s">
+      <default>'rgba(255,255,255,0.95)'</default>
+      <summary>Color of the value text drawn on graphs</summary>
+    </key>
+
+    <!-- CPU -->
+    <key name="cpu-enabled" type="b"><default>true</default><summary>Show CPU graph</summary></key>
+    <key name="cpu-width" type="i"><range min="10" max="1000"/><default>100</default><summary>CPU graph width (px)</summary></key>
+    <key name="cpu-interval" type="i"><range min="1" max="3600"/><default>1</default><summary>CPU seconds per pixel</summary></key>
+    <key name="cpu-show-iowait" type="b"><default>true</default><summary>Show I/O wait in CPU graph</summary></key>
+    <key name="cpu-user-color" type="s"><default>'rgb(51,209,122)'</default><summary>CPU user color</summary></key>
+    <key name="cpu-system-color" type="s"><default>'rgb(237,51,59)'</default><summary>CPU system color</summary></key>
+    <key name="cpu-nice-color" type="s"><default>'rgb(246,211,45)'</default><summary>CPU nice color</summary></key>
+    <key name="cpu-iowait-color" type="s"><default>'rgb(98,160,234)'</default><summary>CPU I/O wait color</summary></key>
+
+    <!-- Memory -->
+    <key name="memory-enabled" type="b"><default>true</default><summary>Show memory graph</summary></key>
+    <key name="memory-width" type="i"><range min="10" max="1000"/><default>100</default><summary>Memory graph width (px)</summary></key>
+    <key name="memory-interval" type="i"><range min="1" max="3600"/><default>1</default><summary>Memory seconds per pixel</summary></key>
+    <key name="memory-used-color" type="s"><default>'rgb(220,138,221)'</default><summary>Memory used color</summary></key>
+    <key name="memory-cache-color" type="s"><default>'rgba(220,138,221,0.35)'</default><summary>Memory buffers/cache color</summary></key>
+
+    <!-- Swap -->
+    <key name="swap-enabled" type="b"><default>true</default><summary>Show swap graph</summary></key>
+    <key name="swap-width" type="i"><range min="10" max="1000"/><default>100</default><summary>Swap graph width (px)</summary></key>
+    <key name="swap-interval" type="i"><range min="1" max="3600"/><default>1</default><summary>Swap seconds per pixel</summary></key>
+    <key name="swap-color" type="s"><default>'rgb(255,163,72)'</default><summary>Swap used color</summary></key>
+
+    <!-- Network -->
+    <key name="net-enabled" type="b"><default>true</default><summary>Show network graph</summary></key>
+    <key name="net-width" type="i"><range min="10" max="1000"/><default>100</default><summary>Network graph width (px)</summary></key>
+    <key name="net-interval" type="i"><range min="1" max="3600"/><default>1</default><summary>Network seconds per pixel</summary></key>
+    <key name="net-down-color" type="s"><default>'rgb(98,160,234)'</default><summary>Network download color</summary></key>
+    <key name="net-up-color" type="s"><default>'rgba(255,120,0,0.75)'</default><summary>Network upload color</summary></key>
+
+    <!-- Temperature -->
+    <key name="temp-enabled" type="b"><default>true</default><summary>Show temperature graph</summary></key>
+    <key name="temp-width" type="i"><range min="10" max="1000"/><default>100</default><summary>Temperature graph width (px)</summary></key>
+    <key name="temp-interval" type="i"><range min="1" max="3600"/><default>1</default><summary>Temperature seconds per pixel</summary></key>
+    <key name="temp-sensor" type="s">
+      <default>''</default>
+      <summary>Temperature sensor id ("hwmon-name/label"); empty selects automatically</summary>
+    </key>
+    <key name="temp-min" type="i"><range min="-50" max="200"/><default>20</default><summary>Temperature at graph bottom (°C)</summary></key>
+    <key name="temp-max" type="i"><range min="0" max="250"/><default>100</default><summary>Temperature at graph top (°C)</summary></key>
+    <key name="temp-color" type="s"><default>'rgb(246,97,81)'</default><summary>Temperature color</summary></key>
+
+    <!-- Disk usage -->
+    <key name="disk-enabled" type="b"><default>true</default><summary>Show partition usage graphs</summary></key>
+    <key name="disk-mounts" type="as"><default>['/']</default><summary>Mount points to show usage for</summary></key>
+    <key name="disk-width" type="i"><range min="10" max="1000"/><default>100</default><summary>Partition graph width (px)</summary></key>
+    <key name="disk-interval" type="i"><range min="1" max="3600"/><default>10</default><summary>Partition seconds per pixel</summary></key>
+    <key name="disk-color" type="s"><default>'rgb(143,240,164)'</default><summary>Partition used color</summary></key>
+  </schema>
+</schemalist>

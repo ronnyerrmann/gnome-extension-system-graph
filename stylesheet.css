@@ -1,0 +1,16 @@
+.system-graph-box {
+  spacing: 6px;
+}
+
+.system-graph-item {
+  spacing: 4px;
+}
+
+.system-graph-label {
+  font-size: 9pt;
+  font-weight: bold;
+}
+
+.system-graph-area {
+  margin: 3px 0;
+}

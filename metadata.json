@@ -1,0 +1,8 @@
+{
+  "uuid": "system-graph@ronnyerrmann",
+  "name": "System Graph",
+  "description": "Panel graphs for CPU (user/system/nice/iowait), memory, swap, network, CPU temperature and partition usage. Graph width, sample interval, colors, temperature sensor and partitions are configurable.",
+  "shell-version": ["42", "43", "44"],
+  "settings-schema": "org.gnome.shell.extensions.system-graph",
+  "version": 1
+}
