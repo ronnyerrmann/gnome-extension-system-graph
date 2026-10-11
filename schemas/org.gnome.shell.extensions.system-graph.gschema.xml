@@ -59,6 +59,13 @@
     <key name="net-down-color" type="s"><default>'rgb(98,160,234)'</default><summary>Network download color</summary></key>
     <key name="net-up-color" type="s"><default>'rgba(255,120,0,0.75)'</default><summary>Network upload color</summary></key>
 
+    <!-- Disk I/O -->
+    <key name="io-enabled" type="b"><default>true</default><summary>Show disk I/O graph</summary></key>
+    <key name="io-width" type="i"><range min="10" max="1000"/><default>100</default><summary>Disk I/O graph width (px)</summary></key>
+    <key name="io-interval" type="i"><range min="1" max="3600"/><default>1</default><summary>Disk I/O seconds per pixel</summary></key>
+    <key name="io-read-color" type="s"><default>'rgb(87,227,137)'</default><summary>Disk read color</summary></key>
+    <key name="io-write-color" type="s"><default>'rgba(237,51,59,0.75)'</default><summary>Disk write color</summary></key>
+
     <!-- Temperature -->
     <key name="temp-enabled" type="b"><default>true</default><summary>Show temperature graph</summary></key>
     <key name="temp-width" type="i"><range min="10" max="1000"/><default>100</default><summary>Temperature graph width (px)</summary></key>

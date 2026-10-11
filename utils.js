@@ -68,7 +68,7 @@ function readMeminfo() {
 
 const VIRTUAL_IFACE = /^(lo|veth|docker|br-|virbr|vnet|tun|tap|wg|zt|tailscale)/;
 
-/* Sum rx/tx byte counters of all physical interfaces. */
+/* Sum [rx, tx] byte counters of all physical interfaces. */
 function readNet() {
     const txt = readFile('/proc/net/dev');
     if (!txt)
@@ -85,7 +85,28 @@ function readNet() {
         rx += f[0];
         tx += f[8];
     }
-    return { rx, tx };
+    return [rx, tx];
+}
+
+/* Sum bytes read/written over physical disks. Only devices with a
+ * /sys/block/X/device link count, so partitions, loop, dm and md
+ * devices don't double count the same I/O. */
+function readDiskIo() {
+    const txt = readFile('/proc/diskstats');
+    if (!txt)
+        return null;
+    const disks = new Set(listDir('/sys/block').filter(d =>
+        GLib.file_test(`/sys/block/${d}/device`, GLib.FileTest.EXISTS)));
+    let read = 0, written = 0;
+    for (const line of txt.split('\n')) {
+        const f = line.trim().split(/\s+/);
+        if (f.length < 10 || !disks.has(f[2]))
+            continue;
+        // sectors are always 512 bytes in diskstats
+        read += Number(f[5]) * 512;
+        written += Number(f[9]) * 512;
+    }
+    return [read, written];
 }
 
 /* ---------- temperature sensors ---------- */

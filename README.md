@@ -8,6 +8,7 @@ GNOME Shell 42–44 panel extension with history graphs for:
 - **Memory**: used plus buffers/cache
 - **Swap**
 - **Network**: download and upload (all physical interfaces, auto-scaled)
+- **Disk I/O**: read and write speed (all physical disks, auto-scaled)
 - **CPU temperature**: any hwmon sensor, selectable (default: auto-detect `coretemp`/`k10temp`)
 - **Partition usage**: % used for each selected mount point (same calculation as `df`)
 

@@ -15,7 +15,7 @@ const U = Me.imports.utils;
 
 /* Settings that require the set of graphs to be rebuilt. */
 const REBUILD_KEYS = new Set([
-    'cpu-enabled', 'memory-enabled', 'swap-enabled', 'net-enabled',
+    'cpu-enabled', 'memory-enabled', 'swap-enabled', 'net-enabled', 'io-enabled',
     'temp-enabled', 'disk-enabled', 'disk-mounts',
 ]);
 /* Settings that require the indicator to be re-added to the panel. */
@@ -339,49 +339,66 @@ var SwapGraph = class SwapGraph extends Graph {
     }
 };
 
-var NetGraph = class NetGraph extends Graph {
-    constructor(settings) {
-        super(settings, 'net', 'NET');
+/* Two byte counters (e.g. rx/tx) shown as overlapping auto-scaled rates. */
+var RateGraph = class RateGraph extends Graph {
+    /* read: () => [a, b] byte counters or null; names: [[arrow, word], …] */
+    constructor(settings, prefix, label, title, read, names) {
+        super(settings, prefix, label);
+        this._title = title;
+        this._read = read;
+        this._names = names;
         this._prev = null;
         this._last = [0, 0];
     }
 
     sample() {
-        const cur = U.readNet();
+        const cur = this._read();
         const now = GLib.get_monotonic_time();
         const prev = this._prev;
-        this._prev = cur ? { ...cur, time: now } : null;
+        this._prev = cur ? { cur, time: now } : null;
         if (!cur || !prev)
             return null;
         const dt = (now - prev.time) / 1e6;
         if (dt <= 0)
             return null;
-        // counters can go backwards when an interface disappears
-        this._last = [
-            Math.max(0, cur.rx - prev.rx) / dt,
-            Math.max(0, cur.tx - prev.tx) / dt,
-        ];
+        // counters can go backwards when a device disappears
+        this._last = cur.map((v, i) => Math.max(0, v - prev.cur[i]) / dt);
         return this._last;
     }
 
     draw(cr, w, h) {
         let max = 1024;
-        for (const [d, u] of this._visible(w))
-            max = Math.max(max, d, u);
-        this.drawOverlay(cr, w, h, [
-            this.color('net-down-color'),
-            this.color('net-up-color'),
-        ], max);
+        for (const [a, b] of this._visible(w))
+            max = Math.max(max, a, b);
+        this.drawOverlay(cr, w, h, this._names.map(([, , key]) => this.color(key)), max);
     }
 
     valueText() {
-        const [d, u] = this._last;
-        return `↓${U.formatBytes(d)} ↑${U.formatBytes(u)}`;
+        return this._names.map(([arrow], i) => `${arrow}${U.formatBytes(this._last[i])}`).join(' ');
     }
 
     describe() {
-        const [d, u] = this._last;
-        return `Network: ↓ ${U.formatBytes(d, '/s')}   ↑ ${U.formatBytes(u, '/s')}`;
+        const parts = this._names.map(([arrow, word], i) =>
+            `${arrow} ${word} ${U.formatBytes(this._last[i], '/s')}`);
+        return `${this._title}: ${parts.join('   ')}`;
+    }
+};
+
+var NetGraph = class NetGraph extends RateGraph {
+    constructor(settings) {
+        super(settings, 'net', 'NET', 'Network', U.readNet, [
+            ['↓', 'down', 'net-down-color'],
+            ['↑', 'up', 'net-up-color'],
+        ]);
+    }
+};
+
+var IoGraph = class IoGraph extends RateGraph {
+    constructor(settings) {
+        super(settings, 'io', 'IO', 'Disk I/O', U.readDiskIo, [
+            ['R', 'read', 'io-read-color'],
+            ['W', 'write', 'io-write-color'],
+        ]);
     }
 };
 
@@ -554,6 +571,8 @@ class SystemGraphIndicator extends PanelMenu.Button {
             g.push(new SwapGraph(s));
         if (s.get_boolean('net-enabled'))
             g.push(new NetGraph(s));
+        if (s.get_boolean('io-enabled'))
+            g.push(new IoGraph(s));
         if (s.get_boolean('temp-enabled'))
             g.push(new TempGraph(s));
         if (s.get_boolean('disk-enabled')) {

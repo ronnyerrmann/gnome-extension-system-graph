@@ -128,6 +128,11 @@ function graphsPage(settings) {
     g.add(colorRow(settings, 'net-down-color', 'Download'));
     g.add(colorRow(settings, 'net-up-color', 'Upload'));
 
+    g = graphGroup(page, settings, 'io', 'Disk I/O',
+        'Read/write speed summed over all physical disks; scale adapts to the visible peak');
+    g.add(colorRow(settings, 'io-read-color', 'Read'));
+    g.add(colorRow(settings, 'io-write-color', 'Write'));
+
     g = graphGroup(page, settings, 'temp', 'Temperature');
     const sensors = U.listTempSensors();
     const auto = U.resolveTempSensor('');
